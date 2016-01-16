@@ -1,0 +1,391 @@
+syntax = "proto3";
+
+package pb;
+
+
+import "github.com/gogo/protobuf/gogoproto/gogo.proto";
+
+option (gogoproto.gostring_all) = true;
+option (gogoproto.goproto_stringer_all) = false;
+option (gogoproto.stringer_all) =  true;
+
+service PathFS {
+	// Used for pretty printing.
+	rpc String(StringRequest) returns (StringResponse) {}
+
+	// If called, provide debug output through the log package.
+	rpc SetDebug(SetDebugRequest) returns (SetDebugResponse) {}
+
+	// Attributes.  This function is the main entry point, through
+	// which FUSE discovers which files and directories exist.
+	//
+	// If the filesystem wants to implement hard-links, it should
+	// return consistent non-zero FileInfo.Ino data.  Using
+	// hardlinks incurs a performance hit.
+	rpc GetAttr(GetAttrRequest) returns (GetAttrResponse) {}
+
+	rpc Chmod(ChmodRequest) returns (ChmodResponse) {}
+	rpc Chown(ChownRequest) returns (ChownResponse) {}
+	rpc Utimens(UtimensRequest) returns (UtimensResponse) {}
+	rpc Truncate(TruncateRequest) returns (TruncateResponse) {}
+	rpc Access(AccessRequest) returns (AccessResponse) {}
+	rpc Link(LinkRequest) returns (LinkResponse) {}
+	rpc Mkdir(MkdirRequest) returns (MkdirResponse) {}
+	rpc Mknod(MknodRequest) returns (MknodResponse) {}
+	rpc Rename(RenameRequest) returns (RenameResponse) {}
+	rpc Rmdir(RmdirRequest) returns (RmdirResponse) {}
+	rpc Unlink(UnlinkRequest) returns (UnlinkResponse) {}
+
+	// Extended attributes.
+	rpc GetXAttr(GetXAttrRequest) returns (GetXAttrResponse) {}
+	rpc ListXAttr(ListXAttrRequest) returns (ListXAttrResponse) {}
+	rpc RemoveXAttr(RemoveXAttrRequest) returns (RemoveXAttrResponse) {}
+	rpc SetXAttr(SetXAttrRequest) returns (SetXAttrResponse) {}
+
+	// File handling.  If opening for writing, the file's mtime
+	// should be updated too.
+	rpc Open(OpenRequest) returns (OpenResponse) {}
+	rpc Create(CreateRequest) returns (CreateResponse) {}
+
+	// Directory handling
+	rpc OpenDir(OpenDirRequest) returns (OpenDirResponse) {}
+
+	// Symlinks.
+	rpc Symlink(SymlinkRequest) returns (SymlinkResponse) {}
+	rpc Readlink(ReadlinkRequest) returns (ReadlinkResponse) {}
+
+	rpc StatFs(StatFsRequest) returns (StatFsResponse) {}
+}
+
+message Status {
+	int32 Code = 1 [(gogoproto.casttype)="github.com/hanwen/go-fuse/fuse.Status"];
+}
+
+message Owner {
+	uint32 Uid = 1;
+	uint32 Gid = 2;
+}
+
+message Context {
+	Owner Owner = 1;
+	uint32 Pid = 2;
+}
+
+// String
+
+message StringRequest {
+}
+
+message StringResponse {
+	string String = 1;
+}
+
+// SetDebug
+
+message SetDebugRequest {
+	bool Debug = 1;
+}
+
+message SetDebugResponse {
+}
+
+// GetAttrs
+
+message Attr {
+    uint64 Ino = 1;
+    uint64 SizeAttr = 2;
+    uint64 Blocks = 3;
+    uint64 Atime = 4;
+    uint64 Mtime = 5;
+    uint64 Ctime = 6;
+    uint32 Atimensec = 7;
+    uint32 Mtimensec = 8;
+    uint32 Ctimensec = 9;
+    uint32 Mode = 10;
+    uint32 Nlink = 11;
+    Owner Owner = 12;
+    uint32 Rdev    = 13;
+    uint32 Blksize = 14;
+    uint32 Padding = 15;
+}
+
+message GetAttrRequest {
+	string Name = 1;
+	Context Context = 2;
+}
+
+message GetAttrResponse {
+	Attr Attr = 1;
+	Status Status = 2;
+}
+
+
+// Operations
+
+message ChmodRequest {
+	string Name = 1;
+	uint32 Mode = 2;
+	Context Context = 3;
+}
+
+message ChmodResponse {
+	Status Status = 1;
+}
+
+
+message ChownRequest {
+	string Name = 1;
+	uint32 UID = 2;
+	uint32 GID = 3;
+	Context Context = 4;
+}
+
+message ChownResponse {
+	Status Status = 1;
+}
+
+
+message UtimensRequest {
+	string Name = 1;
+	uint64 Atime = 2;
+	uint64 Mtime = 3;
+	Context Context = 4;
+}
+
+message UtimensResponse {
+	Status Status = 1;
+}
+
+
+message TruncateRequest {
+	string Name = 1;
+	uint64 Size = 2;
+	Context Context = 3;
+}
+
+message TruncateResponse {
+	Status Status = 1;
+}
+
+
+message AccessRequest {
+	string Name = 1;
+	uint32 Mode = 2;
+	Context Context = 3;
+}
+
+message AccessResponse {
+	Status Status = 1;
+}
+
+
+message LinkRequest {
+	string OldName = 1;
+	string NewName = 2;
+	Context Context = 3;
+}
+
+message LinkResponse {
+	Status Status = 1;
+}
+
+
+message MkdirRequest {
+	string Name = 1;
+	uint32 Mode = 2;
+	Context Context = 3;
+}
+
+message MkdirResponse {
+	Status Status = 1;
+}
+
+
+message MknodRequest {
+	string Name = 1;
+	uint32 Mode = 2;
+	uint64 Dev = 3;
+	Context Context = 4;
+}
+
+message MknodResponse {
+	Status Status = 1;
+}
+
+
+message RenameRequest {
+	string OldName = 1;
+	string NewName = 2;
+	Context Context = 3;
+}
+
+message RenameResponse {
+	Status Status = 1;
+}
+
+
+message RmdirRequest {
+	string Name = 1;
+	Context Context = 2;
+}
+
+message RmdirResponse {
+	Status Status = 1;
+}
+
+
+message UnlinkRequest {
+	string Name = 1;
+	Context Context = 2;
+}
+
+message UnlinkResponse {
+	Status Status = 1;
+}
+
+
+// XAttrs
+
+message GetXAttrRequest {
+	string Name = 1;
+	string Attribute = 2;
+	Context Context = 3;
+}
+
+message GetXAttrResponse {
+	bytes Data = 1;
+	Status Status = 2;
+}
+
+
+message ListXAttrRequest {
+	string Name = 1;
+	Context Context = 2;
+}
+
+message ListXAttrResponse {
+	repeated string Attributes = 1;
+	Status Status = 2;
+}
+
+
+message RemoveXAttrRequest {
+	string Name = 1;
+	string Attribute = 2;
+	Context Context = 3;
+}
+
+message RemoveXAttrResponse {
+	Status Status = 1;
+}
+
+
+message SetXAttrRequest {
+	string Name = 1;
+	string Attribute = 2;
+	bytes Data = 3;
+	int32 Flags = 4;
+	Context Context = 5;
+}
+
+message SetXAttrResponse {
+	Status Status = 1;
+}
+
+
+// File handling
+
+message File {
+	bytes Data = 1;
+}
+
+message OpenRequest {
+	string Name = 1;
+	uint32 Flags = 2;
+	Context Context = 3;
+}
+
+message OpenResponse {
+	File File = 1;
+	Status Status = 2;
+}
+
+
+message CreateRequest {
+	string Name = 1;
+	uint32 Flags = 2;
+	uint32 Mode = 3;
+	Context Context = 4;
+}
+
+message CreateResponse {
+	File File = 1;
+	Status Status = 2;
+	Context Context = 3;
+}
+
+
+// Directory handling
+
+message DirEntry {
+	uint32 Mode = 1;
+	string Name = 2;
+}
+
+message OpenDirRequest {
+	string Name = 1;
+	Context Context = 2;
+}
+
+message OpenDirResponse {
+	repeated DirEntry Dirs = 1;
+	Status Status = 2;
+}
+
+
+// Symlinks
+
+message SymlinkRequest {
+	string Value = 1;
+	string LinkName = 2;
+	Context Context = 3;
+}
+
+message SymlinkResponse {
+	Status Status = 1;
+}
+
+
+message ReadlinkRequest {
+	string Name = 1;
+	Context Context = 2;
+}
+
+message ReadlinkResponse {
+	string Value = 1;
+	Status Status = 2;
+}
+
+
+// StatFs
+
+message StatFs {
+	uint64 Blocks = 1;
+    uint64 Bfree = 2;
+    uint64 Bavail = 3;
+    uint64 Files = 4;
+    uint64 Ffree = 5;
+    uint64 Bsize = 6;
+    uint64 NameLen = 7;
+    uint64 Frsize = 8;
+    uint64 Padding = 9;
+    repeated uint32 Spare = 10;
+}
+
+message StatFsRequest {
+	string Name = 1;
+}
+
+message StatFsResponse {
+	StatFs StatFs = 1;
+}
