@@ -3,7 +3,8 @@
 Remote filesystem based on grpc and fuse
 
 Grfuse consists of two parts: grpc server and client library, which implements
-https://godoc.org/github.com/hanwen/go-fuse/fuse/pathfs#FileSystem interface.
+[github.com/hanwen/go-fuse/fuse/pathfs#FileSystem](https://godoc.org/github.com/hanwen/go-fuse/fuse/pathfs#FileSystem)
+interface.
 You can switch underlying implementations in server.
 
 # Example
