@@ -274,8 +274,8 @@ func (m *ChownResponse) GetStatus() *Status {
 
 type UtimensRequest struct {
 	Name    string   `protobuf:"bytes,1,opt,name=Name,proto3" json:"Name,omitempty"`
-	Atime   uint64   `protobuf:"varint,2,opt,name=Atime,proto3" json:"Atime,omitempty"`
-	Mtime   uint64   `protobuf:"varint,3,opt,name=Mtime,proto3" json:"Mtime,omitempty"`
+	Atime   int64    `protobuf:"varint,2,opt,name=Atime,proto3" json:"Atime,omitempty"`
+	Mtime   int64    `protobuf:"varint,3,opt,name=Mtime,proto3" json:"Mtime,omitempty"`
 	Context *Context `protobuf:"bytes,4,opt,name=Context" json:"Context,omitempty"`
 }
 
@@ -426,7 +426,7 @@ func (m *MkdirResponse) GetStatus() *Status {
 type MknodRequest struct {
 	Name    string   `protobuf:"bytes,1,opt,name=Name,proto3" json:"Name,omitempty"`
 	Mode    uint32   `protobuf:"varint,2,opt,name=Mode,proto3" json:"Mode,omitempty"`
-	Dev     uint64   `protobuf:"varint,3,opt,name=Dev,proto3" json:"Dev,omitempty"`
+	Dev     uint32   `protobuf:"varint,3,opt,name=Dev,proto3" json:"Dev,omitempty"`
 	Context *Context `protobuf:"bytes,4,opt,name=Context" json:"Context,omitempty"`
 }
 
@@ -637,7 +637,7 @@ type SetXAttrRequest struct {
 	Name      string   `protobuf:"bytes,1,opt,name=Name,proto3" json:"Name,omitempty"`
 	Attribute string   `protobuf:"bytes,2,opt,name=Attribute,proto3" json:"Attribute,omitempty"`
 	Data      []byte   `protobuf:"bytes,3,opt,name=Data,proto3" json:"Data,omitempty"`
-	Flags     int32    `protobuf:"varint,4,opt,name=Flags,proto3" json:"Flags,omitempty"`
+	Flags     int      `protobuf:"varint,4,opt,name=Flags,proto3,casttype=int" json:"Flags,omitempty"`
 	Context   *Context `protobuf:"bytes,5,opt,name=Context" json:"Context,omitempty"`
 }
 
@@ -868,10 +868,10 @@ type StatFs struct {
 	Bavail  uint64   `protobuf:"varint,3,opt,name=Bavail,proto3" json:"Bavail,omitempty"`
 	Files   uint64   `protobuf:"varint,4,opt,name=Files,proto3" json:"Files,omitempty"`
 	Ffree   uint64   `protobuf:"varint,5,opt,name=Ffree,proto3" json:"Ffree,omitempty"`
-	Bsize   uint64   `protobuf:"varint,6,opt,name=Bsize,proto3" json:"Bsize,omitempty"`
-	NameLen uint64   `protobuf:"varint,7,opt,name=NameLen,proto3" json:"NameLen,omitempty"`
-	Frsize  uint64   `protobuf:"varint,8,opt,name=Frsize,proto3" json:"Frsize,omitempty"`
-	Padding uint64   `protobuf:"varint,9,opt,name=Padding,proto3" json:"Padding,omitempty"`
+	Bsize   uint32   `protobuf:"varint,6,opt,name=Bsize,proto3" json:"Bsize,omitempty"`
+	NameLen uint32   `protobuf:"varint,7,opt,name=NameLen,proto3" json:"NameLen,omitempty"`
+	Frsize  uint32   `protobuf:"varint,8,opt,name=Frsize,proto3" json:"Frsize,omitempty"`
+	Padding uint32   `protobuf:"varint,9,opt,name=Padding,proto3" json:"Padding,omitempty"`
 	Spare   []uint32 `protobuf:"varint,10,rep,name=Spare" json:"Spare,omitempty"`
 }
 

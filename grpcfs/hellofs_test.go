@@ -62,14 +62,6 @@ func (h *helloServer) Close() {
 	h.gSrv.Stop()
 }
 
-type helloClient struct {
-	fsSrv *fuse.Server
-}
-
-func (h *helloClient) Close() {
-	h.fsSrv.Unmount()
-}
-
 func startServer(root string, fs pathfs.FileSystem) (*helloServer, error) {
 	nfs := pathfs.NewPathNodeFs(fs, nil)
 	fuseSrv, _, err := nodefs.MountRoot(root, nfs.Root(), nil)
@@ -91,25 +83,6 @@ func startServer(root string, fs pathfs.FileSystem) (*helloServer, error) {
 	}, nil
 }
 
-func startFs(root, address string) (*helloClient, error) {
-	dialOpts := []grpc.DialOption{grpc.WithInsecure()}
-	conn, err := grpc.Dial(address, dialOpts...)
-	if err != nil {
-		return nil, err
-	}
-	cli := pb.NewPathFSClient(conn)
-	fs := New(cli)
-	nfs := pathfs.NewPathNodeFs(fs, nil)
-	server, _, err := nodefs.MountRoot(root, nfs.Root(), nil)
-	if err != nil {
-		return nil, err
-	}
-	go server.Serve()
-	return &helloClient{
-		fsSrv: server,
-	}, nil
-}
-
 func TestHelloWorld(t *testing.T) {
 	tmpSrv, err := ioutil.TempDir("", "fuse-server-")
 	if err != nil {
@@ -127,11 +100,11 @@ func TestHelloWorld(t *testing.T) {
 		t.Fatal(err)
 	}
 	defer os.RemoveAll(tmpCli)
-	hcli, err := startFs(tmpCli, hsrv.addr.String())
+	cliFs, err := startFs(tmpCli, hsrv.addr.String())
 	if err != nil {
 		t.Fatal(err)
 	}
-	defer hcli.Close()
+	defer cliFs.Close()
 	fis, err := ioutil.ReadDir(tmpCli)
 	if err != nil {
 		t.Fatal(err)

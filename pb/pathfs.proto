@@ -147,8 +147,8 @@ message ChownResponse {
 
 message UtimensRequest {
 	string Name = 1;
-	uint64 Atime = 2;
-	uint64 Mtime = 3;
+	int64 Atime = 2;
+	int64 Mtime = 3;
 	Context Context = 4;
 }
 
@@ -204,7 +204,7 @@ message MkdirResponse {
 message MknodRequest {
 	string Name = 1;
 	uint32 Mode = 2;
-	uint64 Dev = 3;
+	uint32 Dev = 3;
 	Context Context = 4;
 }
 
@@ -284,7 +284,7 @@ message SetXAttrRequest {
 	string Name = 1;
 	string Attribute = 2;
 	bytes Data = 3;
-	int32 Flags = 4;
+	int32 Flags = 4 [(gogoproto.casttype)="int"];
 	Context Context = 5;
 }
 
@@ -375,10 +375,10 @@ message StatFs {
     uint64 Bavail = 3;
     uint64 Files = 4;
     uint64 Ffree = 5;
-    uint64 Bsize = 6;
-    uint64 NameLen = 7;
-    uint64 Frsize = 8;
-    uint64 Padding = 9;
+    uint32 Bsize = 6;
+    uint32 NameLen = 7;
+    uint32 Frsize = 8;
+    uint32 Padding = 9;
     repeated uint32 Spare = 10;
 }
 
